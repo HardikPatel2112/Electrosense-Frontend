@@ -11,12 +11,13 @@ import axios from "axios";
 import { BiSolidCoffeeTogo } from "react-icons/bi";
 import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Hero from "components/hero/BackgroundAsImage.js";
+import withAuthorization from "Utility/withAuthorization";
+
 const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
 
 
-export default function AdminAction() {
+function AdminAction() {
   const [data, setData] = useState([]);
 const [isChange,TriggerChange]=useState(false);
   
@@ -24,7 +25,7 @@ const [isChange,TriggerChange]=useState(false);
   const handleDeleteProduct = async (row) => {
     console.log(row);
     try {
-      const response = await axios.delete(`https://localhost:7051/api/Products/Delete?id=${row.id}`);
+      const response = await axios.delete(`https://thenexttechnology.bsite.net/api/Products/Delete?id=${row.id}`);
      
       setData(prevData => prevData.filter(item => item.id !== row.id));
       toast.success("Deleted Successfully!" ,{position: "top-right",
@@ -104,7 +105,7 @@ const [isChange,TriggerChange]=useState(false);
     <div>
       <AnimationRevealPage>
 
-        <Hero/>
+        <Header/>
         
         <Container>         
 
@@ -123,6 +124,8 @@ const [isChange,TriggerChange]=useState(false);
     </div>
   );
 }
+
+export default withAuthorization(AdminAction) 
 
 const tableCustomStyles = {
   headCells: {

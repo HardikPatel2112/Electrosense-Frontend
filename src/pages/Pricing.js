@@ -5,12 +5,12 @@ import Pricing from "components/pricing/TwoPlansWithDurationSwitcher.js";
 import Testimonial from "components/testimonials/ThreeColumnWithProfileImage.js";
 import Footer from "components/footers/FiveColumnWithInputForm.js";
 import FAQ from "components/faqs/SingleCol.js";
-import Hero from "components/hero/BackgroundAsImage.js";
+import Hero from 'components/hero/BackgroundAsImage.js'
 
 export default () => {
   return (
     <AnimationRevealPage>
-    <Hero/>
+  
       <Pricing />
       <Testimonial
         heading="Our Paying Customers"

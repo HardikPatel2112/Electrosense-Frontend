@@ -7,7 +7,7 @@ import { css } from "styled-components/macro"; //eslint-disable-line
 import Header from "components/headers/light.js";
 import Footer from "components/footers/FiveColumnWithInputForm.js";
 import { SectionHeading } from "components/misc/Headings";
-import Hero from "components/hero/BackgroundAsImage.js";
+
 const HeadingRow = tw.div`flex`;
 const Heading = tw(SectionHeading)`text-gray-900 mb-10`;
 const Text = styled.div`
@@ -38,7 +38,7 @@ const Text = styled.div`
 export default ({ headingText = "Terms And Condition" }) => {
   return (
     <AnimationRevealPage>
-      <Hero />
+      <Header />
       <Container>
         <ContentWithPaddingXl>
           <HeadingRow>

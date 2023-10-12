@@ -44,7 +44,7 @@ const UploadImage = async () => {
   formData.append('Name', newProduct.name);
  let response =null;
   try {
-     response = await fetch('https://localhost:7051/api/Products/upload', {
+     response = await fetch('https://thenexttechnology.bsite.net/api/Products/upload', {
       method: 'POST',
       body: formData
     });
@@ -76,7 +76,7 @@ const handleSubmit = async (event) => {
   }
 
   try {
-    const response =  await axios.post('https://localhost:7051/api/Products/Add',productToAdd);
+    const response =  await axios.post('https://thenexttechnology.bsite.net/api/Products/Add',productToAdd);
 
     if (response.status === 200) {
   

@@ -6,7 +6,7 @@ import Header from "components/headers/light.js";
 import Footer from "components/footers/FiveColumnWithInputForm.js";
 import ContactUsForm from "components/forms/TwoColContactUsWithIllustrationFullForm.js";
 import ContactDetails from "components/cards/ThreeColContactDetails.js";
-import Hero from "components/hero/BackgroundAsImage.js";
+import Hero from 'components/hero/BackgroundAsImage.js'
 const Address = tw.span`leading-relaxed`;
 const AddressLine = tw.span`block`;
 const Email = tw.span`text-sm mt-6 block text-gray-500`;

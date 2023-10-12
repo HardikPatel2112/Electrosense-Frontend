@@ -49,16 +49,8 @@ export default () => {
   }, []);
   return (
     <AnimationRevealPage>
-      <Hero
-       
-        description="Manufacturer & Supplier of
-        Industrial Automation and Switchgears Products."
-        imageSrc={landingimage}
-        imageCss={imageCss}
-        imageDecoratorBlob={true}
-        primaryButtonText="Order Now"
-        watchVideoButtonText="Meet The Chefs"
-      />
+      
+      <Hero/>
       <MainFeature
         subheading={<Subheading>Established Since 2014</Subheading>}
         heading={
@@ -178,11 +170,10 @@ export default () => {
 };
 
 const getAutomationProducts = async () => {
-  const baseURL = "https://localhost:7051/api/Products/GetList";
 
   // Make the GET request and handle the response
   const response = await axios.get(
-    "https://localhost:7051/api/Products/GetList"
+    "https://thenexttechnology.bsite.net/api/Products/GetList"
   );
 
   // Map the response data to the desired format

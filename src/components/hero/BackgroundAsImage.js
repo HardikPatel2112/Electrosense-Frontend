@@ -8,7 +8,25 @@ import ResponsiveVideoEmbed from "../../helpers/ResponsiveVideoEmbed.js";
 import landingimage from '../../electrosenseResources/images/landingpage.jpg'
 import jwtDecode from "jwt-decode";
 
+const StyledHeader = styled(Header)`
+  ${tw`pt-8 max-w-none`}
+  ${DesktopNavLinks} ${NavLink}, ${LogoLink} {
+    ${tw`text-black hover:border-gray-300 hover:text-pink-600`}
+  }
+  ${NavToggle}.closed {
+    ${tw`text-gray-100 hover:text-orange-500`}
+  }
+`;
 
+const StyledHeaderHome = styled(Header)`
+  ${tw`pt-8 max-w-none`}
+  ${DesktopNavLinks} ${NavLink}, ${LogoLink} {
+    ${tw`text-gray-100 hover:border-gray-300 hover:text-pink-600`}
+  }
+  ${NavToggle}.closed {
+    ${tw`text-gray-100 hover:text-orange-500`}
+  }
+`;
 
 const Container = styled.div`
   ${tw`relative -mx-8 -mt-8 bg-center bg-cover`}
@@ -18,10 +36,10 @@ const Container = styled.div`
 const ContainerNoImage = styled.div`
   ${tw`relative -mx-10 -mt-10 bg-center bg-cover`}
     height:6rem;
-    background-color: #ffffff;
   `;
 
-const OpacityOverlay = tw.div`z-10 absolute inset-0 bg-primary-500 opacity-25`;
+const OpacityOverlayHome = tw.div`z-10 absolute inset-0 bg-primary-900 opacity-25`;
+const OpacityOverlay = tw.div`z-10 absolute inset-0 bg-white opacity-25`;
 
 const HeroContainer = tw.div`z-20 relative px-4 sm:px-8 max-w-screen-xl mx-auto`;
 const TwoColumn = tw.div`pt-24 pb-32 px-4 flex justify-between items-center flex-col lg:flex-row`;
@@ -56,32 +74,22 @@ const StyledResponsiveVideoEmbed = styled(ResponsiveVideoEmbed)`
   }
 `;
 
-const StyledHeader = styled(Header)`
-  ${tw`pt-8 max-w-none`}
-  ${DesktopNavLinks} ${NavLink}, ${LogoLink} {
-    ${tw`text-gray-100 hover:border-gray-300 hover:text-gray-300`}
-  }
-  ${NavToggle}.closed {
-    ${tw`text-gray-100 hover:text-primary-500`}
-  }
-`;
-
 export default () => {
 
   var token=localStorage?.getItem('token');
   const[isloggedIn,SetLoginStatus]=useState(token? true :false);
   const location =useLocation();
-  
+
 
   const handleLogout=()=>{
     localStorage.removeItem('token');
     SetLoginStatus(false);
   }
- 
+
   useEffect(() => {
 
     console.log("use Effect Triggered");
-    console.log(location.pathname);
+  
    
   }, [isloggedIn,location]);
  
@@ -97,15 +105,16 @@ export default () => {
   
 
 {
-  token && jwtDecode(token).role =='Admin' ? 
-  <Link to="/AdminAction">  <NavLink to="/AdminAction">AdminAction</NavLink> </Link>   : 
-   (
-   <Link to="/login"><PrimaryLink tw="lg:ml-12!">Login</PrimaryLink></Link>
- )     
+  isloggedIn && jwtDecode(token)?.role.toUpperCase()=='ADMIN' &&
+  <Link to="/AdminAction">  <NavLink to="/AdminAction">AdminAction</NavLink> </Link>  
 }      
 
     {   
-     token && <PrimaryLink onClick={handleLogout} tw="lg:ml-12!">Logout</PrimaryLink>
+     isloggedIn ?      
+     <PrimaryLink onClick={handleLogout} tw="lg:ml-12!">Logout</PrimaryLink> :
+
+     <Link to="/login"><PrimaryLink tw="lg:ml-12!">Login</PrimaryLink></Link>
+     
     }
    </NavLinks>
   ];
@@ -118,9 +127,9 @@ export default () => {
         (location && location.pathname=="/" ) ? 
         
         <Container>
-<OpacityOverlay />
+<OpacityOverlayHome />
       <HeroContainer>
-        <StyledHeader links={navLinks} />     
+        <StyledHeaderHome links={navLinks} />     
        
         <TwoColumn>
           <LeftColumn>
@@ -150,7 +159,8 @@ export default () => {
  <ContainerNoImage>
 <OpacityOverlay />
       <HeroContainer>
-        <StyledHeader links={navLinks} />                
+        <StyledHeader links={navLinks} />    
+             
    
       </HeroContainer>      
         </ContainerNoImage> 

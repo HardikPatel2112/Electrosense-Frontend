@@ -2,7 +2,7 @@ import axios from "axios";
 import '../styles/datatableCustom.css'
 
 const getAllProducts =async () => {
-    const response = await axios.get("https://localhost:7051/api/Products/GetList");
+    const response = await axios.get("https://thenexttechnology.bsite.net/api/Products/GetList");
     const newElement = response.data.result.map((item) => ({
         title: item.name,
         imageSrc:btoa(item.productImage),

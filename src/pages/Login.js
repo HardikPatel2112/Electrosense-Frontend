@@ -84,7 +84,7 @@ const handleSubmit=async (e)=>{
   e.preventDefault();
 
   try {
-    const response =  await axios.post('https://localhost:7051/api/auth/login',loginCred);
+    const response =  await axios.post('https://thenexttechnology.bsite.net/api/auth/login',loginCred);
 
     if (response.status === 200) {
   
