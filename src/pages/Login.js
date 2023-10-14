@@ -84,7 +84,7 @@ const handleSubmit=async (e)=>{
   e.preventDefault();
 
   try {
-    const response =  await axios.post('https://thenexttechnology.bsite.net/api/auth/login',loginCred);
+    const response =  await axios.post('https://e2020231012190229.azurewebsites.net/api/auth/login',loginCred);
 
     if (response.status === 200) {
   
@@ -152,9 +152,7 @@ const handleSubmit=async (e)=>{
               </p>
               <p tw="mt-8 text-sm text-gray-600 text-center">
                 Dont have an account?{" "}
-                <a href={signupUrl} tw="border-b border-gray-500 border-dotted">
-                  Sign Up
-                </a>
+                <Link to="/signup">   Sign Up</Link>             
               </p>
             </FormContainer>
           </MainContent>

@@ -51,7 +51,7 @@ export default () => {
     <AnimationRevealPage>
       
       <Hero/>
-      <MainFeature
+      {/* <MainFeature
         subheading={<Subheading>Established Since 2014</Subheading>}
         heading={
           <>
@@ -78,7 +78,7 @@ export default () => {
         imageCss={imageCss}
         imageDecoratorBlob={true}
         imageDecoratorBlobCss={tw`left-1/2 -translate-x-1/2 md:w-32 md:h-32 opacity-25`}
-      />
+      /> */}
       {/* TabGrid Component also accepts a tabs prop to customize the tabs and its content directly. Please open the TabGrid component file to see the structure of the tabs props.*/}
       <TabGrid
         heading={
@@ -173,14 +173,14 @@ const getAutomationProducts = async () => {
 
   // Make the GET request and handle the response
   const response = await axios.get(
-    "https://thenexttechnology.bsite.net/api/Products/GetList"
+    "https://e2020231012190229.azurewebsites.net/api/Products/GetList"
   );
 
   // Map the response data to the desired format
   const mappedArray = response.data.result.map((item) => ({
     title: item.name,
     imageSrc:
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80",
+      "https://e2020231012190229.azurewebsites.net/api/products/37232",
     content: item.description,
     price: "$5.99",
     rating: "5.0",

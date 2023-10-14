@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import tw from "twin.macro";
 import styled from "styled-components";
@@ -9,8 +9,8 @@ import { PrimaryButton as PrimaryButtonBase } from "components/misc/Buttons.js";
 import { ReactComponent as StarIcon } from "images/star-icon.svg";
 import { ReactComponent as SvgDecoratorBlob1 } from "images/svg-decorator-blob-5.svg";
 import { ReactComponent as SvgDecoratorBlob2 } from "images/svg-decorator-blob-7.svg";
-
-import { FaBaby } from 'react-icons/fa';
+import { FaCartShopping,FaHeart,FaCirclePlus,FaSquareMinus } from "react-icons/fa6";
+import {  toast } from 'react-toastify';
 const imageContext = require.context('../../electrosenseResources/Products', false, /\.(jpg|jpeg|png)$/);
 const imageNames = imageContext.keys().map(imageContext);
 
@@ -71,14 +71,74 @@ export default ({ heading,tabs}) => {
    * To see what attributes are configurable of each object inside this array see the example above for "Starters".
    */
 
-
   const tabsKeys = Object.keys(tabs);
 
   if(tabsKeys.length<1){
     return null;
   }
-  console.log(tabsKeys);
+
   const [activeTab, setActiveTab] = useState(tabsKeys[0]);    //"Automation"
+ const [cartItems,setCartItems]=useState((localStorage?.getItem('cartItems')) ? (JSON.parse(localStorage?.getItem('cartItems'))) : [] );
+
+
+  const handleAddToWishlist=()=>{
+    console.log("handleAddToWishlist");
+  }
+  const handleInquiry=()=>{
+    console.log("handleInquiry");
+  }
+
+ 
+  const AddItemToCart = (newItem) => {
+    const index = cartItems?.findIndex(item => item.id === newItem.id);
+    if (index === -1) {
+      newItem.quantity=1;
+      setCartItems(cartItems?.concat(newItem));
+      toast.success("Product added successfully!" ,{position: "top-right",
+      autoClose: 1000,theme: "dark"}) 
+    } else {
+
+      const updatedItems = [...cartItems];
+      if(updatedItems.length>0){
+  updatedItems[index].quantity = (updatedItems[index]?.quantity ? updatedItems[index]?.quantity : 0) + 1;
+      }    
+      setCartItems(updatedItems );
+    } 
+
+  };   
+  
+
+  const handleAddtoCart = (cartItem) => {
+    AddItemToCart(cartItem);
+  };
+
+  const handleAlterQuantity=(cartItem,quantitychange)=>{    
+  
+    let isAlreadyAdded=cartItems?.find(item=>item.id==cartItem.id)?.id > 0;   
+console.log(isAlreadyAdded);
+    if(!isAlreadyAdded){
+      AddItemToCart(cartItem);   
+    }else{
+      const updatedProducts = cartItems.map(product => {
+        if (product.id === cartItem.id) {
+          return {
+            ...product,
+            quantity: (product.quantity + quantitychange) < 0 ? 0 : (product.quantity + quantitychange)
+          };
+        } 
+        return product;   
+      });
+  
+      setCartItems(updatedProducts);
+    }
+  
+
+    console.log(cartItems);
+  }
+
+  useEffect(() => {      
+    localStorage.setItem('cartItems',JSON.stringify(cartItems)); 
+  }, [cartItems]);  
 
   return (
     <Container>
@@ -116,15 +176,9 @@ export default ({ heading,tabs}) => {
             {tabs[tabKey].map((card, index) => (                          
            
                           <CardContainer key={index} >
-                          <Card className="group" href={card.url} initial="rest" whileHover="hover" animate="rest" >
-                            <CardImageContainer imageSrc={imageNames.find(item=>{if(item.toLowerCase().includes(card.title.toLowerCase()))return item;})}>
-                              <CardRatingContainer>
-                                <CardRating>
-                                  <StarIcon />
-                                  {card.rating}
-                                </CardRating>
-                   
-                              </CardRatingContainer>
+                          <Card className="group" href_={card.url} initial="rest" whileHover="hover" animate="rest" >
+                            <CardImageContainer imageSrc={card.imageSrc}>
+                       
                               <CardHoverOverlay
                                 variants={{
                                   hover: {
@@ -138,14 +192,30 @@ export default ({ heading,tabs}) => {
                                 }}
                                 transition={{ duration: 0.3 }}
                               >
-                                <CardButton>Buy Now</CardButton>
+                                <CardButton onClick={handleInquiry}> Inquire Now  </CardButton>
+                                <CardRatingContainer onClick={handleAddToWishlist}>
+                                <CardRating >
+                                <FaHeart cursor="pointer"/>
+                                </CardRating>                   
+                              </CardRatingContainer>
+                                
+                                
                               </CardHoverOverlay>
                             </CardImageContainer>
+                       
                             <CardText>
-                              <CardTitle>{card.title}</CardTitle>
-                              <CardContent>{card.content}</CardContent>
-                              <CardPrice>{card.price}</CardPrice>
-                            </CardText>
+                            <CardPrice>{card.title}</CardPrice>
+                              <CardTitle style={{ display: 'flex', alignItems: 'center' }}>                                
+                                <FaCartShopping  onClick={()=>handleAddtoCart(card)}  style={{ marginRight: '130px'}} cursor="pointer" size={30}/>
+                                <FaCirclePlus onClick={()=>handleAlterQuantity(card,1)}  style={{ marginRight: '15px' }}  cursor="pointer"  size={25}/>
+                                <span style={{ marginRight: '15px'}}>
+                                  {(cartItems?.find(item => item.id ==card.id)?.quantity > 0 )? 
+                            cartItems?.find(item => item.id ==card.id)?.quantity
+                                 :0
+                                 }</span>
+                                <FaSquareMinus onClick={()=>handleAlterQuantity(card,-1)}  style={{ marginRight: '15px'}}  cursor="pointer"  size={25}/>
+                              </CardTitle>      
+                             </CardText>
                           </Card>
                         </CardContainer>
          

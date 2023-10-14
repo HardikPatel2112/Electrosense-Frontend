@@ -7,7 +7,7 @@ import Header, { NavLink, NavLinks, PrimaryLink, LogoLink, NavToggle, DesktopNav
 import ResponsiveVideoEmbed from "../../helpers/ResponsiveVideoEmbed.js";
 import landingimage from '../../electrosenseResources/images/landingpage.jpg'
 import jwtDecode from "jwt-decode";
-
+import { ToastContainer } from 'react-toastify';
 const StyledHeader = styled(Header)`
   ${tw`pt-8 max-w-none`}
   ${DesktopNavLinks} ${NavLink}, ${LogoLink} {
@@ -128,6 +128,7 @@ export default () => {
         
         <Container>
 <OpacityOverlayHome />
+<ToastContainer/>
       <HeroContainer>
         <StyledHeaderHome links={navLinks} />     
        

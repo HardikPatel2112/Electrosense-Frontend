@@ -25,7 +25,7 @@ const [isChange,TriggerChange]=useState(false);
   const handleDeleteProduct = async (row) => {
     console.log(row);
     try {
-      const response = await axios.delete(`https://thenexttechnology.bsite.net/api/Products/Delete?id=${row.id}`);
+      const response = await axios.delete(`https://e2020231012190229.azurewebsites.net/api/Products/Delete?id=${row.id}`);
      
       setData(prevData => prevData.filter(item => item.id !== row.id));
       toast.success("Deleted Successfully!" ,{position: "top-right",
