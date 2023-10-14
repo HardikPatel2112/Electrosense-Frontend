@@ -9,7 +9,7 @@ import { PrimaryButton as PrimaryButtonBase } from "components/misc/Buttons.js";
 import { ReactComponent as StarIcon } from "images/star-icon.svg";
 import { ReactComponent as SvgDecoratorBlob1 } from "images/svg-decorator-blob-5.svg";
 import { ReactComponent as SvgDecoratorBlob2 } from "images/svg-decorator-blob-7.svg";
-import { FaCartShopping,FaHeart,FaCirclePlus,FaSquareMinus } from "react-icons/fa6";
+import { FaCartShopping,FaHeart,FaCirclePlus,FaSquareMinus,FaListUl,FaPeopleGroup } from "react-icons/fa6";
 import {  toast } from 'react-toastify';
 const imageContext = require.context('../../electrosenseResources/Products', false, /\.(jpg|jpeg|png)$/);
 const imageNames = imageContext.keys().map(imageContext);
@@ -19,6 +19,7 @@ const imageNames = imageContext.keys().map(imageContext);
 const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row`;
 const Header = tw(SectionHeading)``;
 const TabsControl = tw.div`flex flex-wrap bg-gray-200 px-2 py-2 rounded leading-none mt-12 xl:mt-0`;
+const Select = tw.select`w-4/6 px-2 py-1 rounded-sm font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5 first:mt-0`;
 
 const TabControl = styled.div`
   ${tw`cursor-pointer px-6 py-3 mt-2 sm:mt-0 sm:mr-2 last:mr-0 text-gray-600 font-medium rounded-sm transition duration-300 text-sm sm:text-base w-1/2 sm:w-auto text-center`}
@@ -201,11 +202,24 @@ console.log(isAlreadyAdded);
                                 
                                 
                               </CardHoverOverlay>
-                            </CardImageContainer>
+                            </CardImageContainer>                         
                        
                             <CardText>
-                            <CardPrice>{card.title}</CardPrice>
-                              <CardTitle style={{ display: 'flex', alignItems: 'center' }}>                                
+                            <CardTitle>{card.title}      </CardTitle>     
+                           
+                            <CardContent style={{ display: 'flex'}}> 
+                            
+                            {/* <FaPeopleGroup cursor="pointer" size={20}/>  &nbsp; */}
+                            
+                           Supplier:    &nbsp; &nbsp;
+                             <Select    id="Supplier"  name="Supplier"  >
+                               <option selected value="Supplier1">Supplier1</option>
+                               <option value="Supplier2">Supplier2</option>    
+                             </Select>
+                           
+                             </CardContent>
+                              <CardTitle style={{ display: 'flex', alignItems: 'center' }}>  
+                                                     
                                 <FaCartShopping  onClick={()=>handleAddtoCart(card)}  style={{ marginRight: '130px'}} cursor="pointer" size={30}/>
                                 <FaCirclePlus onClick={()=>handleAlterQuantity(card,1)}  style={{ marginRight: '15px' }}  cursor="pointer"  size={25}/>
                                 <span style={{ marginRight: '15px'}}>

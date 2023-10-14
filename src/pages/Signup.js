@@ -166,7 +166,6 @@ export default ({
          
                 <p tw="mt-8 text-sm text-gray-600 text-center">
                   Already have an account?{" "}
-
                   <Link  tw="border-b border-gray-500 border-dotted" to="/login"> Sign In</Link>
                  
                 </p>
