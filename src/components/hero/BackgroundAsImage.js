@@ -102,7 +102,7 @@ export default () => {
     <Link to="/pricing">   <NavLink href="/#">Pricing</NavLink> </Link>
     <Link to="/contactUs"> <NavLink href="/#">Contact Us</NavLink></Link>
 
-  
+    <Link to="/cart"> <NavLink href="/#">cart</NavLink></Link>
 
 {
   isloggedIn && jwtDecode(token)?.role.toUpperCase()=='ADMIN' &&

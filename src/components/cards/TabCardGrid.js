@@ -11,6 +11,7 @@ import { ReactComponent as SvgDecoratorBlob1 } from "images/svg-decorator-blob-5
 import { ReactComponent as SvgDecoratorBlob2 } from "images/svg-decorator-blob-7.svg";
 import { FaCartShopping,FaHeart,FaCirclePlus,FaSquareMinus,FaListUl,FaPeopleGroup } from "react-icons/fa6";
 import {  toast } from 'react-toastify';
+
 const imageContext = require.context('../../electrosenseResources/Products', false, /\.(jpg|jpeg|png)$/);
 const imageNames = imageContext.keys().map(imageContext);
 
@@ -19,8 +20,12 @@ const imageNames = imageContext.keys().map(imageContext);
 const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row`;
 const Header = tw(SectionHeading)``;
 const TabsControl = tw.div`flex flex-wrap bg-gray-200 px-2 py-2 rounded leading-none mt-12 xl:mt-0`;
-const Select = tw.select`w-4/6 px-2 py-1 rounded-sm font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5 first:mt-0`;
-
+const Select = tw.select`
+  w-4/6 px-2 py-1 rounded-sm font-light bg-gray-100 
+  border border-gray-100 placeholder-gray-500 text-sm 
+  focus:outline-none focus:border-gray-400 focus:bg-white 
+  mt-2 first:mt-0
+`;
 const TabControl = styled.div`
   ${tw`cursor-pointer px-6 py-3 mt-2 sm:mt-0 sm:mr-2 last:mr-0 text-gray-600 font-medium rounded-sm transition duration-300 text-sm sm:text-base w-1/2 sm:w-auto text-center`}
   &:hover {
@@ -211,10 +216,16 @@ console.log(isAlreadyAdded);
                             
                             {/* <FaPeopleGroup cursor="pointer" size={20}/>  &nbsp; */}
                             
-                           Supplier:    &nbsp; &nbsp;
-                             <Select    id="Supplier"  name="Supplier"  >
-                               <option selected value="Supplier1">Supplier1</option>
-                               <option value="Supplier2">Supplier2</option>    
+                           Supplier:  &nbsp; 
+                             <Select     
+                               id="Supplier"
+                               name="Supplier"                          
+                               >
+                                {card.suppliers.map((supplier,index)=>(
+
+<option value={supplier.id} key={index}>{supplier.name}</option>
+                                ))}
+           
                              </Select>
                            
                              </CardContent>

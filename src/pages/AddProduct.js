@@ -11,6 +11,17 @@ import { SectionHeading } from "components/misc/Headings";
 import { PrimaryButton } from "components/misc/Buttons";
 import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Select from 'react-select'
+import makeAnimated from 'react-select/animated';
+import { useEffect } from "react";
+
+
+const SelectWithtw = tw(Select)`
+  w-full px-2 py-1 rounded-lg font-light bg-gray-100 
+  border border-gray-100 placeholder-gray-500 text-sm 
+  focus:outline-none focus:border-gray-400 focus:bg-white 
+  mt-5 first:mt-2
+`;
 
 const HeadingRow = tw.div`flex`;
 const Heading = tw(SectionHeading)`text-gray-900`;
@@ -28,15 +39,11 @@ const SubmitButton = styled.button`
   }
 `;
 
-const Select = tw.select`w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5 first:mt-0`;
+//const Select = tw.select`w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5 first:mt-0`;
 
 function AddProduct({ submitButtonText = "Add Product" }) {
 
-
-    const [newProduct, SetProduct] = useState(null);
-
-
-
+const [newProduct, SetProduct] = useState(null);
 const UploadImage = async () => { 
 
   const formData = new FormData();
@@ -61,7 +68,27 @@ const UploadImage = async () => {
     }
 };
 
+const [suppliers,setsuppliers]=useState(null);
 
+useEffect(() => {  
+  
+  const fetchandSetsuppliers = async () => {
+    const response = await axios.get("https://e2020231012190229.azurewebsites.net/api/suppliers/List");
+
+    const supOptions=response.data.result.map((item) => ({
+      value: item.id,
+       label:item.name
+    }));
+     setsuppliers(supOptions)
+  };
+
+  fetchandSetsuppliers();
+
+}, []);  
+
+const [selectedSupIds,setselectedSupIds]=useState([]);
+
+console.log(selectedSupIds);
 
 const handleSubmit = async (event) => {
   event.preventDefault();
@@ -72,7 +99,8 @@ const handleSubmit = async (event) => {
     Name:newProduct?.name,
     Tag:newProduct.Tag?newProduct.Tag:"Automation",
     Description:newProduct.description,
-    ProductImageName: imageName
+    ProductImageName: imageName,
+    suppliersIds:selectedSupIds
   }
 
   try {
@@ -151,18 +179,33 @@ const handleSubmit = async (event) => {
               <AiOutlineCloudUpload /> Upload 
               </button>  */}
 
-              <Select
+              <SelectWithtw
+               options={[ { value: 'Automation', label: 'Automation' },{ value: 'SwitchGear', label: 'SwitchGear' },{ value: 'Other', label: 'Other' }]}
                 type="Tag"
                 name="Tag"
                 placeholder="Tag"
-                onChange={(event) =>
+                onChange={(selected) =>
                   SetProduct((values) => ({  ...values,
-                    [event.target.name]: event.target.value,
+                    ["Tag"]: selected.value,
                   }))   }>
                 <option selected value="Automation">Automation</option>
                 <option value="SwitchGear">SwitchGear</option>
                 <option value="Other">Other</option>
-              </Select>
+              </SelectWithtw>
+
+              <SelectWithtw
+               options={suppliers}
+               isMulti
+                type="suppliersIds"
+                name="suppliersIds"
+                placeholder="suppliers"
+                onChange={(selected) =>
+                  setselectedSupIds(selectedSupIds.concat(selected[selected.length-1].value)
+                    )
+                   }                  
+                  >
+       
+              </SelectWithtw>
               <SubmitButton type="submit">
                 <span className="text">{submitButtonText}</span>
               </SubmitButton>

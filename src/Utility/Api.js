@@ -13,7 +13,8 @@ const getAllProducts =async () => {
         url: "products/"+item.id,
         Tag:item.tag,
         ProductImageName:item.productImageName,
-        id:item.id
+        id:item.id,
+        suppliers:item.suppliers
       }));
       return newElement;    
 };

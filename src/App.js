@@ -114,6 +114,7 @@ import BlogIndex from "pages/BlogIndex";
 import ContactUs from "pages/ContactUs";
 import ProductsDetails from "pages/ProductsDetails";
 import AddProduct from "pages/AddProduct";
+import Cart from "pages/Cart";
 
 export default function App() {
   // If you want to disable the animation just use the disabled `prop` like below on your page's component
@@ -140,6 +141,7 @@ export default function App() {
           <Route path="/blogIndex" element={<BlogIndex />} />
           <Route path="/contactUs" element={<ContactUs />} />
           <Route path="/Products/:id" element={<ProductsDetails />} />
+          <Route path="/cart" element={<Cart />} />
         </Routes>
       </Router>
     </>
