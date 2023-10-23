@@ -8,6 +8,8 @@ import ResponsiveVideoEmbed from "../../helpers/ResponsiveVideoEmbed.js";
 import landingimage from '../../electrosenseResources/images/landingpage.jpg'
 import jwtDecode from "jwt-decode";
 import { ToastContainer } from 'react-toastify';
+import { FaUser } from "react-icons/fa6";
+import FloatingIcon from "../cards/FloatingIcon.js";
 const StyledHeader = styled(Header)`
   ${tw`pt-8 max-w-none`}
   ${DesktopNavLinks} ${NavLink}, ${LogoLink} {
@@ -83,6 +85,7 @@ export default () => {
 
   const handleLogout=()=>{
     localStorage.removeItem('token');
+    localStorage.removeItem('cartItems');
     SetLoginStatus(false);
   }
 
@@ -102,7 +105,7 @@ export default () => {
     <Link to="/pricing">   <NavLink href="/#">Pricing</NavLink> </Link>
     <Link to="/contactUs"> <NavLink href="/#">Contact Us</NavLink></Link>
 
-    <Link to="/cart"> <NavLink href="/#">cart</NavLink></Link>
+    {/* <Link to="/cart"> <NavLink href="/#">cart</NavLink></Link> */}
 
 {
   isloggedIn && jwtDecode(token)?.role.toUpperCase()=='ADMIN' &&
@@ -110,8 +113,9 @@ export default () => {
 }      
 
     {   
-     isloggedIn ?      
-     <PrimaryLink onClick={handleLogout} tw="lg:ml-12!">Logout</PrimaryLink> :
+     isloggedIn ?   
+(   <><PrimaryLink onClick={handleLogout} tw="lg:ml-12!">Logout</PrimaryLink> </>
+    ) :
 
      <Link to="/login"><PrimaryLink tw="lg:ml-12!">Login</PrimaryLink></Link>
      
@@ -129,9 +133,10 @@ export default () => {
         <Container>
 <OpacityOverlayHome />
 <ToastContainer/>
+
       <HeroContainer>
         <StyledHeaderHome links={navLinks} />     
-       
+        <FloatingIcon/> 
         <TwoColumn>
           <LeftColumn>
             <Notification> WELCOME TO</Notification>
@@ -161,7 +166,7 @@ export default () => {
 <OpacityOverlay />
       <HeroContainer>
         <StyledHeader links={navLinks} />    
-             
+        <FloatingIcon/> 
    
       </HeroContainer>      
         </ContainerNoImage> 
