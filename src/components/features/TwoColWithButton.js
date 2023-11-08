@@ -47,9 +47,9 @@ export default ({
       Designed & Developed by <span tw="text-primary-500">Professionals.</span>
     </>
   ),
-  description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+  description = "Welcome to Electrosense Automation! As a leading manufacturer and supplier of industrial automation products, we pride ourselves on delivering innovative and reliable solutions to our valued clients",
   primaryButtonText = "Learn More",
-  primaryButtonUrl = "https://timerse.com",
+  primaryButtonUrl = "/",
   imageSrc = TeamIllustrationSrc,
   buttonRounded = true,
   imageRounded = true,

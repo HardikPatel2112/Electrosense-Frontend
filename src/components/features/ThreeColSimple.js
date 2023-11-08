@@ -75,7 +75,7 @@ export default ({
   heading = "",
   subheading = "",
   description = "",
-  imageContainerCss = null,
+  imageContainerCss =null,
   imageCss = null
 }) => {
   /*
@@ -96,16 +96,16 @@ export default ({
             <Column key={i}>
               <Card href={card.url}>
                 <span className="imageContainer" css={imageContainerCss}>
-                  <img src={card.imageSrc} alt="" css={imageCss} />
+                  <img src={card.imageSrc} alt="" style={{background:'#800080'}} />
                 </span>
                 <span className="title">{card.title}</span>
                 <p className="description">{card.description}</p>
-                {linkText && (
+                {/* {linkText && (
                   <span className="link">
                     <span>{linkText}</span>
                     <ArrowRightIcon className="icon" />
                   </span>
-                )}
+                )} */}
               </Card>
             </Column>
           ))}

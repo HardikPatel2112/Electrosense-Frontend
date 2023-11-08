@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { PostAddToCart,deleteFromCart,FetchUserCart } from "Utility/Api";
 import { motion } from "framer-motion";
 import tw from "twin.macro";
 import styled from "styled-components";
@@ -6,9 +7,10 @@ import { css } from "styled-components/macro"; //eslint-disable-line
 import { Container, ContentWithPaddingXl } from "components/misc/Layouts.js";
 import { SectionHeading } from "components/misc/Headings.js";
 import { PrimaryButton as PrimaryButtonBase } from "components/misc/Buttons.js";
-import { ReactComponent as StarIcon } from "images/star-icon.svg";
 import { ReactComponent as SvgDecoratorBlob1 } from "images/svg-decorator-blob-5.svg";
 import { ReactComponent as SvgDecoratorBlob2 } from "images/svg-decorator-blob-7.svg";
+import {ToastSuccess,ToastError} from "components/Toaster/ToastAlert";
+
 import {
   FaCartShopping,
   FaHeart,
@@ -16,15 +18,15 @@ import {
   FaSquareMinus,
   FaTrashCan,
 } from "react-icons/fa6";
-import { toast } from "react-toastify";
-import axios from "axios";
+import Spinner from "components/Spinners/Spinner";
+
+
 const imageContext = require.context(
   "../../electrosenseResources/Products",
   false,
   /\.(jpg|jpeg|png)$/
 );
 const imageNames = imageContext.keys().map(imageContext);
-
 const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row`;
 const Header = tw(SectionHeading)``;
 const TabsControl = tw.div`flex flex-wrap bg-gray-200 px-2 py-2 rounded leading-none mt-12 xl:mt-0`;
@@ -70,13 +72,9 @@ const CardHoverOverlay = styled(motion.div)`
   ${tw`absolute inset-0 flex justify-center items-center`}
 `;
 const CardButton = tw(PrimaryButtonBase)`text-sm`;
-
-const CardReview = tw.div`font-medium text-xs text-gray-600`;
-
 const CardText = tw.div`p-3 text-gray-900`;
 const CardTitle = tw.h5`text-lg font-semibold group-hover:text-primary-500`;
 const CardContent = tw.p`mt-1 text-sm font-medium text-gray-600`;
-const CardPrice = tw.p`mt-4 text-xl font-bold`;
 
 const DecoratorBlob1 = styled(SvgDecoratorBlob1)`
   ${tw`pointer-events-none -z-20 absolute right-0 top-0 h-64 w-64 opacity-15 transform translate-x-2/3 -translate-y-12 text-pink-400`}
@@ -98,6 +96,7 @@ export default ({ heading, tabs }) => {
     return null;
   }
 
+  const [isLoading,SetisLoading]=useState(true);
   const [activeTab, setActiveTab] = useState(tabsKeys[0]); //"Automation"
   const [cartItems, setCartItems] = useState(
     localStorage?.getItem("cartItems")
@@ -112,11 +111,6 @@ export default ({ heading, tabs }) => {
     console.log("handleInquiry");
   };
 
-  const config = {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  };
 
   const AddItemToCart = async (newItem, quantity) => {
     const index = cartItems?.findIndex(
@@ -135,57 +129,36 @@ export default ({ heading, tabs }) => {
         productId: newItem.productId,
         supplierId: newItem.supplierId,
         quantity: newItem.quantity,
+        productName: newItem.name,
+        supplierName: selectedsupForProd ? selectedsupForProd.name : newItem.suppliers[0].name
       };
-      const response = await axios.post(
-        `https://e2020231012190229.azurewebsites.net/api/Cart/AddToCart`,
-        obj,
-        config
-      );
+
+      const response = await PostAddToCart(obj);
 
       if (response.status === 200) {
         setCartItems(cartItems?.concat(obj));
-        toast.success("Product added successfully!", {
-          position: "top-right",
-          autoClose: 1000,
-          theme: "dark",
-        });
+        ToastSuccess("Product added successfully!")
+       
       } else {
-        toast.error("Failed to add product to cart !", {
-          position: "top-right",
-          autoClose: 5000,
-          theme: "dark",
-        });
+        ToastError("Failed to add product to cart !");      
       }
     } else {
       const updatedItems = [...cartItems];
       if (updatedItems.length > 0) {
         updatedItems[index].quantity =
-          (updatedItems[index]?.quantity ? updatedItems[index]?.quantity : 0) +
-          1;
+          (updatedItems[index]?.quantity ? updatedItems[index]?.quantity : 0) +  1;
       }
-      const response = await axios.post(
-        `https://e2020231012190229.azurewebsites.net/api/Cart/AddToCart`,
-        {
-          productId: newItem.productId,
-          supplierId: newItem.supplierId,
-          quantity: updatedItems[index].quantity,
-        },
-        config
-      );
+      const response = await PostAddToCart({
+        productId: newItem.productId,
+        supplierId: newItem.supplierId,
+        quantity: updatedItems[index].quantity,
+      });
 
       if (response.status === 200) {
         setCartItems(updatedItems);
-        toast.success("quantity updateed!", {
-          position: "top-right",
-          autoClose: 1000,
-          theme: "dark",
-        });
+        ToastSuccess("quantity updateed!");
       } else {
-        toast.error("Failed to add update quantity !", {
-          position: "top-right",
-          autoClose: 5000,
-          theme: "dark",
-        });
+        ToastError("Failed to add update quantity !");
       }
     }
   };
@@ -222,18 +195,15 @@ export default ({ heading, tabs }) => {
       let selectedsupForProd = selectedSuppliers?.find(
         (item) => item.productId == cartItem.productId
       )?.supplierId;
-      const response = await axios.post(
-        `https://e2020231012190229.azurewebsites.net/api/Cart/AddToCart`,
-        {
+      
+      const response = await PostAddToCart({
           productId: cartItem.productId,
           supplierId:
             selectedsupForProd > 0
               ? selectedsupForProd
               : cartItem.suppliers[0].id,
           quantity: updatedProducts[index].quantity,
-        },
-        config
-      );
+        });
       if (response.status === 200) {
         setCartItems(updatedProducts);
       } else {
@@ -272,15 +242,11 @@ export default ({ heading, tabs }) => {
       }
       return product;
     });
-    const response = await axios.post(
-      `https://e2020231012190229.azurewebsites.net/api/Cart/AddToCart`,
-      {
+    const response = await PostAddToCart({      
         productId: item.productId,
         supplierId: e.target.value,
         quantity: item.quantity,
-      },
-      config
-    );
+      });
 
     if (response.status === 200) {
       setCartItems(updatedProducts);
@@ -290,27 +256,28 @@ export default ({ heading, tabs }) => {
   };
 
   useEffect(() => {
-    console.log("useEffect rendered");
-    if (!localStorage.getItem("cartItems")) {
+
+    if (!localStorage.getItem("cartItems") && localStorage.getItem("token")) {
+
       async function setCartItemstolocal() {
         try {
-          const response = await axios.get(
-            `https://e2020231012190229.azurewebsites.net/api/Cart/GetUserCart`,
-            config
-          );
+          const response = await FetchUserCart();
+
           if (response.status === 200) {
             const newElement = response.data.result.map((item) => ({
               productId: item.productId,
               supplierId: item.supplierId,
               quantity: item.quantity,
+              productName:item.productName,
+              supplierName:item.supplierName
             }));
             setCartItems(newElement);
             localStorage.setItem("cartItems", JSON.stringify(newElement));
           } else {
-            console.log("failed to alter quantity");
+            ToastError("failed to alter quantity");
           }
         } catch (error) {
-          console.error("An error occurred:", error);
+          ToastError("An error occurred:", error);
         }
       }
 
@@ -318,47 +285,45 @@ export default ({ heading, tabs }) => {
     } else {
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
     }
+    SetisLoading(false);
   }, [cartItems]);
 
   const handleRemoveFromCart = async (productId) => {
-    const response = await axios.delete(
-      `https://e2020231012190229.azurewebsites.net/api/Cart/RemoveFromCart?productId=${productId}`,
-      config
-    );
+    const response = await deleteFromCart(productId);
 
     if (response.status === 200) {
       setCartItems(cartItems.filter((item) => item.productId != productId));
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
-      toast.success("Removed From Cart!", {
-        position: "top-right",
-        autoClose: 1000,
-        theme: "dark",
-      });
+      ToastSuccess("Removed From Cart!");
     } else {
-      console.log("failed to RemoveFromCart");
+      ToastError("failed to RemoveFromCart");
     }
   };
 
-  const handleSaveQuantity = async (e, item)  => {
+  const handleSaveQuantity = async (e, item) => {
     let i = cartItems.find((x) => x.productId == item.productId);
-   
-    const response = await axios.post(`https://e2020231012190229.azurewebsites.net/api/Cart/AddToCart`,i ,config);
+
+    const response = await PostAddToCart(i);
 
     if (response.status === 200) {
-     
     } else {
       console.log("failed to alter quantity");
     }
   };
   const handleEditQuantity = async (e, item) => {
-    let i = cartItems.find((x) => x.productId == item.productId)?.quantity;
+    let i = cartItems.find((x) => x.productId == item.productId);
     if (!i) {
-      item.quantity= e.target.value;
-      setCartItems(cartItems.filter((e) => e.productId != item.productId)?.concat(item));
+      item.quantity = e.target.value;
+      item.productName= item.name;
+      let selectedsupForProd = selectedSuppliers?.find((item) => item.productId == item.productId)?.supplierId;
+      item.supplierName= selectedsupForProd ? selectedsupForProd.name : item.suppliers[0].name
+      setCartItems(
+        cartItems.filter((e) => e.productId != item.productId)?.concat(item)
+      );
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
       return;
     }
-    
+
     const updatedProducts = cartItems.map((product) => {
       if (product.productId === item.productId) {
         return {
@@ -372,6 +337,8 @@ export default ({ heading, tabs }) => {
   };
 
   return (
+
+    
     <Container>
       <ContentWithPaddingXl>
         <HeaderRow>
@@ -388,8 +355,10 @@ export default ({ heading, tabs }) => {
             ))}
           </TabsControl>
         </HeaderRow>
+{isLoading ? <Spinner/> : 
 
-        {tabsKeys &&
+<>
+{tabsKeys &&
           tabsKeys.length > 0 &&
           tabsKeys.map((tabKey, index) => (
             <TabContent
@@ -519,6 +488,11 @@ export default ({ heading, tabs }) => {
               ))}
             </TabContent>
           ))}
+</>
+
+}
+
+        
       </ContentWithPaddingXl>
       <DecoratorBlob1 />
       <DecoratorBlob2 />

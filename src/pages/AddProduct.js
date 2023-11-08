@@ -14,7 +14,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
 import { useEffect } from "react";
-
+import { FetchSuppliers, PostAddProduct } from "Utility/Api";
+import {ToastSuccess,ToastError} from "components/Toaster/ToastAlert";
 
 const SelectWithtw = tw(Select)`
   w-full px-2 py-1 rounded-lg font-light bg-gray-100 
@@ -51,20 +52,20 @@ const UploadImage = async () => {
   formData.append('Name', newProduct.name);
  let response =null;
   try {
-     response = await fetch('https://e2020231012190229.azurewebsites.net/api/Products/upload?imagename='+newProduct.name, {
+     response = await fetch('https://e2020231012190229.azurewebsites.net/api/Images/upload?imagename='+newProduct.name, {
       method: 'POST',
       body: formData
     });
   
   } catch (error) {
-    toast.error("Error to upload file !" ,{position: "top-right", autoClose: 5000, theme: "dark"})  
+    ToastError("Error to upload file !")  
   }
     if (response.ok) {
       console.log('File uploaded successfully');
       const data = await response.json();
       return data.filename;
     } else {     
-      toast.error("Failed to upload file !" ,{position: "top-right", autoClose: 5000, theme: "dark"})  
+      ToastError("Failed to upload file !")  
     }
 };
 
@@ -73,7 +74,7 @@ const [suppliers,setsuppliers]=useState(null);
 useEffect(() => {  
   
   const fetchandSetsuppliers = async () => {
-    const response = await axios.get("https://e2020231012190229.azurewebsites.net/api/suppliers/List");
+    const response = await FetchSuppliers();
 
     const supOptions=response.data.result.map((item) => ({
       value: item.id,
@@ -104,24 +105,18 @@ const handleSubmit = async (event) => {
   }
 
   try {
-    const response =  await axios.post('https://e2020231012190229.azurewebsites.net/api/Products/Add',productToAdd);
+
+    const response =  await PostAddProduct(productToAdd);
 
     if (response.status === 200) {
   
-      toast.success("Product added successfully!" ,{position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark"}) 
+      ToastSuccess("Product added successfully!") 
     } else {
       
-      toast.error("Failed to add product !" ,{position: "top-right", autoClose: 5000, theme: "dark"})  
+      ToastError("Failed to add product !" )  
     }
   } catch (error) {
-    toast.error("Error adding product !" ,{position: "top-right", autoClose: 5000, theme: "dark"})  
+    ToastError("Error adding product !")  
 
   }
 };

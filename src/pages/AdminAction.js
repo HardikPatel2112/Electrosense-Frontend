@@ -9,9 +9,11 @@ import { Link } from "react-router-dom";
 import Footer from "components/footers/FiveColumnWithInputForm.js";
 import axios from "axios";
 import { BiSolidCoffeeTogo } from "react-icons/bi";
-import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import withAuthorization from "Utility/withAuthorization";
+import {ToastSuccess,ToastError} from "components/Toaster/ToastAlert";
+import Spinner from "components/Spinners/Spinner";
+
 
 const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
@@ -19,33 +21,18 @@ const Content = tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
 
 function AdminAction() {
   const [data, setData] = useState([]);
-const [isChange,TriggerChange]=useState(false);
-  
+  const [isLoading,SetisLoading]=useState(true);
+ 
 
   const handleDeleteProduct = async (row) => {
     console.log(row);
     try {
-      const response = await axios.delete(`https://e2020231012190229.azurewebsites.net/api/Products/Delete?id=${row.id}`);
-     
-      setData(prevData => prevData.filter(item => item.id !== row.id));
-      toast.success("Deleted Successfully!" ,{position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark"})     
+      const response = await axios.delete(`https://e2020231012190229.azurewebsites.net/api/Products/Delete?id=${row.productId}`);
+           setData(prevData => prevData.filter(item => item.productId !== row.productId));   
+      ToastSuccess("Deleted Successfully!")
 
     } catch (error) {
-      toast.error("Error Deleting !" ,{position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark"})  
+      ToastError("Error Deleting !")  
       // Optionally, handle errors or display a message
     }
   }; 
@@ -54,7 +41,7 @@ const [isChange,TriggerChange]=useState(false);
   const columns = [
     {
       name: "Name",
-      selector: "title",
+      selector: "description",
       sortable: true,
       // style: {
       //   background: "gray",
@@ -62,7 +49,7 @@ const [isChange,TriggerChange]=useState(false);
     },
     {
       name: "Description",
-      selector: "content",
+      selector: "description",
       sortable: true,
     },
     {
@@ -70,11 +57,11 @@ const [isChange,TriggerChange]=useState(false);
       selector: "Tag",
       sortable: true,
     },
-    {
-      name: "Product Image Name",
-      selector: "ProductImageName",
-      sortable: true,
-    },
+    // {
+    //   name: "Product Image Name",
+    //   selector: "ProductImageName",
+    //   sortable: true,
+    // },
     {
       name: 'Actions',
       cell: row => (
@@ -92,6 +79,7 @@ const [isChange,TriggerChange]=useState(false);
       try {
         const products = await getAllProducts();
         setData(products);
+        SetisLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -110,12 +98,16 @@ const [isChange,TriggerChange]=useState(false);
         <Container>         
 
           <Content >
+         
             <Link to="/AdminAction/AddProduct" className="btn-add">Add Product</Link>         
           <br/>  <br/>
-            <DataTableExtensions filterDigit={0}  columns={columns} data={data} print={true} export={false} >     
 
-              <DataTable     pagination  highlightOnHover  customStyles={tableCustomStyles}   />    
+           
+            <DataTableExtensions filterDigit={0}  columns={columns} data={data} print={true} export={false} >     
+            { isLoading?  <Spinner/> :
+              <DataTable     pagination  highlightOnHover  customStyles={tableCustomStyles}   />      }  
             </DataTableExtensions>
+         
           </Content>
 
         </Container>      
