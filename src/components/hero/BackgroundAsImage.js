@@ -101,8 +101,8 @@ export default () => {
     <NavLinks key={1}>
     <Link to="/">  <NavLink href="/#"> Home</NavLink></Link>
      <Link to="/AboutUs">  <NavLink href="/#"> AboutUs</NavLink></Link>
-    <Link to="/blogIndex">    <NavLink href="/#">Blog</NavLink> </Link>
-    <Link to="/pricing">   <NavLink href="/#">Pricing</NavLink> </Link>
+    {/* <Link to="/blogIndex">    <NavLink href="/#">Blog</NavLink> </Link>
+    <Link to="/pricing">   <NavLink href="/#">Pricing</NavLink> </Link> */}
     <Link to="/contactUs"> <NavLink href="/#">Contact Us</NavLink></Link>
 
     {/* <Link to="/cart"> <NavLink href="/#">cart</NavLink></Link> */}

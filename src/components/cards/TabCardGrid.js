@@ -119,9 +119,9 @@ export default ({ heading, tabs }) => {
 
     let selectedsupForProd = selectedSuppliers?.find(
       (item) => item.productId == newItem.productId
-    )?.supplierId;
+    );
     newItem.supplierId =
-      selectedsupForProd > 0 ? selectedsupForProd : newItem.suppliers[0].id;
+      selectedsupForProd?.supplierId > 0 ? selectedsupForProd?.supplierId : newItem.suppliers[0].id;
     if (index === -1) {
       newItem.quantity = quantity > 0 ? quantity : 1;
       console.log(newItem);
@@ -130,7 +130,7 @@ export default ({ heading, tabs }) => {
         supplierId: newItem.supplierId,
         quantity: newItem.quantity,
         productName: newItem.name,
-        supplierName: selectedsupForProd ? selectedsupForProd.name : newItem.suppliers[0].name
+        supplierName: selectedsupForProd ? selectedsupForProd.supplierName : newItem.suppliers[0].name
       };
 
       const response = await PostAddToCart(obj);
@@ -221,7 +221,7 @@ export default ({ heading, tabs }) => {
         return prev;
       }
     });
-    let sel = [{ productId: productId, supplierId: e.target.value }].concat(
+    let sel = [{ productId: productId, supplierId: e.target.value ,supplierName: e.target.options[e.target.selectedIndex].text}].concat(
       updatedselection
     );
     setSuppliersSelection(sel);
@@ -230,7 +230,7 @@ export default ({ heading, tabs }) => {
     if (index === -1) {
       return;
     }
-    console.log(e.target.value, productId);
+
     let item;
     const updatedProducts = cartItems.map((product) => {
       if (product.productId === productId) {
@@ -242,10 +242,11 @@ export default ({ heading, tabs }) => {
       }
       return product;
     });
+
     const response = await PostAddToCart({      
         productId: item.productId,
         supplierId: e.target.value,
-        quantity: item.quantity,
+        quantity: item.quantity
       });
 
     if (response.status === 200) {
