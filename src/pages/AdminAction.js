@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import DataTableExtensions from "react-data-table-component-extensions";
 import { getAllProducts } from "Utility/Api";
-import Header from "components/headers/light.js";
+
 import tw from "twin.macro";
 import { Link } from "react-router-dom";
 import Footer from "components/footers/FiveColumnWithInputForm.js";
@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import withAuthorization from "Utility/withAuthorization";
 import {ToastSuccess,ToastError} from "components/Toaster/ToastAlert";
 import Spinner from "components/Spinners/Spinner";
-
+import Hero from "components/hero/BackgroundAsImage.js";
 
 const Container = tw.div`relative`;
 const Content = tw.div`max-w-screen-xl mx-auto py-20 lg:py-24`;
@@ -86,14 +86,14 @@ function AdminAction() {
     };
 
     fetchData();
-    console.log(data);
-  }, []);
+
+  }, [data]);
 
   return (
     <div>
       <AnimationRevealPage>
 
-        <Header/>
+        <Hero/>
         
         <Container>         
 

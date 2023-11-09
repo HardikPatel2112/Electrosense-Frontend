@@ -10,7 +10,6 @@ import logo from "../../images/logo.svg";
 import logoes from '../../electrosenseResources/images/ELECTROSENSE LOGO.png'
 import { ReactComponent as MenuIcon } from "feather-icons/dist/icons/menu.svg";
 import { ReactComponent as CloseIcon } from "feather-icons/dist/icons/x.svg";
-import AdminAction from "pages/AdminAction.js";
 import { Link } from "react-router-dom";
 
 const Header = tw.header`

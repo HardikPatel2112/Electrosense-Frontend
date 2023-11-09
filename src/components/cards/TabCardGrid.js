@@ -281,7 +281,6 @@ export default ({ heading, tabs }) => {
           ToastError("An error occurred:", error);
         }
       }
-
       setCartItemstolocal();
     } else {
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
@@ -429,7 +428,7 @@ export default ({ heading, tabs }) => {
                           }
                         >
                           {card.suppliers.map((supplier, index) => (
-                            <option value={supplier.id} key={index}>
+                            <option value={supplier.id} key={index} selected={(supplier.id==card.selectedSupplierId)? true: false}>
                               {supplier.name}
                             </option>
                           ))}

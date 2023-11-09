@@ -1,10 +1,18 @@
 import axios from "axios";
 import '../styles/datatableCustom.css'
+import jwtDecode from "jwt-decode";
 
 const baseurl= "https://e2020231012190229.azurewebsites.net/api";
+const config = {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  },
+};
+
+var decodedToken=localStorage?.getItem("token")? jwtDecode(localStorage?.getItem("token")) :null;
 
 const getAllProducts =async () => {
-    const response = await axios.get(baseurl + "/Products/GetList");
+    const response = await axios.get(baseurl + `/Products/GetList?nameid=${decodedToken?.nameid}`,config);
     
     const newElement = response.data.result.map((item) => ({
         name: item.name,
@@ -14,16 +22,12 @@ const getAllProducts =async () => {
         Tag:item.tag,
         ProductImageName:item.productImageName,
         productId:item.id,
-        suppliers:item.suppliers
+        suppliers:item.suppliers,
+        selectedSupplierId:   item.selectedSupplierId
       }));
       return newElement;    
 };
 
-const config = {
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-  },
-};
 
 
 

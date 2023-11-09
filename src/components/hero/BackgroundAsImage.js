@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
-import { css } from "styled-components/macro"; //eslint-disable-line
-import { Link, useLocation } from "react-router-dom";
+
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Header, { NavLink, NavLinks, PrimaryLink, LogoLink, NavToggle, DesktopNavLinks } from "../headers/light.js";
 import ResponsiveVideoEmbed from "../../helpers/ResponsiveVideoEmbed.js";
 import landingimage from '../../electrosenseResources/images/landingpage.jpg'
 import jwtDecode from "jwt-decode";
 import { ToastContainer } from 'react-toastify';
-import { FaUser } from "react-icons/fa6";
 import FloatingIcon from "../cards/FloatingIcon.js";
 const StyledHeader = styled(Header)`
   ${tw`pt-8 max-w-none`}
@@ -82,17 +81,17 @@ export default () => {
   const[isloggedIn,SetLoginStatus]=useState(token? true :false);
   const location =useLocation();
 
-
+  const navigate = useNavigate();
   const handleLogout=()=>{
     localStorage.removeItem('token');
     localStorage.removeItem('cartItems');
     SetLoginStatus(false);
+    navigate("/")
   }
 
   useEffect(() => {
-
-    console.log("use Effect Triggered");
   
+   
    
   }, [isloggedIn,location]);
  
