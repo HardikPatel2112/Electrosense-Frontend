@@ -3,11 +3,7 @@ import '../styles/datatableCustom.css'
 import jwtDecode from "jwt-decode";
 
 const baseurl= "https://e2020231012190229.azurewebsites.net/api";
-const config = {
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-  },
-};
+
 
 var decodedToken=localStorage?.getItem("token")? jwtDecode(localStorage?.getItem("token")) :null;
 
@@ -71,5 +67,9 @@ const FetchSuppliers=async()=>{
     await axios.get(baseurl + "/suppliers/List")
     );
   }
-
+  const config = {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
 export {getAllProducts,PostAddToCart,deleteFromCart,FetchUserCart,PostAddProduct,FetchSuppliers};
