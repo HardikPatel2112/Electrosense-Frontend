@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import tw from "twin.macro";
 import styled from "styled-components";
-
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Header, { NavLink, NavLinks, PrimaryLink, LogoLink, NavToggle, DesktopNavLinks } from "../headers/light.js";
 import ResponsiveVideoEmbed from "../../helpers/ResponsiveVideoEmbed.js";
@@ -132,7 +131,6 @@ export default () => {
         <Container>
 <OpacityOverlayHome />
 <ToastContainer/>
-
       <HeroContainer>
         <StyledHeaderHome links={navLinks} />     
         <FloatingIcon/> 
@@ -168,16 +166,8 @@ export default () => {
         <FloatingIcon/> 
    
       </HeroContainer>      
-        </ContainerNoImage> 
-          
-        }    
-           
-     
-      
- 
-  </>
-
-    
-    
+        </ContainerNoImage>           
+        }     
+  </>   
   );
 };

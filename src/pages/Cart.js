@@ -112,14 +112,11 @@ export default function Cart() {
 
     if (response.status === 200) {
       setCartItems(updatedProducts);
-     // localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
     } else {
       console.log("failed to edit quantity");
     }
-
-
   };
-
 
   return (
     <AnimationRevealPage>
