@@ -328,7 +328,7 @@ export default ({ heading, tabs }) => {
       if (product.productId === item.productId) {
         return {
           ...product,
-          quantity: e.target.value,
+          quantity:Number(e.target.value) ,
         };
       }
       return product;

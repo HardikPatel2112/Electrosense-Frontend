@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import DataTableExtensions from "react-data-table-component-extensions";
 import { getAllProducts } from "Utility/Api";
-
 import tw from "twin.macro";
 import { Link } from "react-router-dom";
 import Footer from "components/footers/FiveColumnWithInputForm.js";
