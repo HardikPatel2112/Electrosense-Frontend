@@ -10,15 +10,14 @@ import TabGrid from "components/cards/TabCardGrid.js";
 import Testimonial from "components/testimonials/ThreeColumnWithProfileImage.js";
 import DownloadApp from "components/cta/DownloadApp.js";
 import Footer from "components/footers/FiveColumnWithInputForm.js";
-
 import chefIconImageSrc from "images/chef-icon.svg";
 import Satisfaction from "../electrosenseResources/icons/icon 02.png";
 import Quality from "../electrosenseResources/icons/icon 05.png";
 import Experience from "../electrosenseResources/icons/icon 08.png";
-
-import axios from "axios";
 import { getAllProducts } from "Utility/Api";
-import landingimage from '../electrosenseResources/images/landingpage.jpg'
+import { useDispatch, useSelector } from "react-redux";
+import Spinner from "components/Spinners/Spinner";
+import { SetProductsReducer } from "Redux/slice/productsSlice";
 
 export default () => {
   const Subheading = tw.span`tracking-wider text-sm font-medium`;
@@ -27,41 +26,57 @@ export default () => {
   const Description = tw.span`inline-block mt-8`;
   const imageCss = tw`rounded-4xl`;
 
-  const [tabs, setTabsProducts] = useState({});
 
+  const [tabs, setTabsProducts] = useState({});
+  const [isLoading,SetisLoading]=useState(true);
+  
+
+  const allProducts=useSelector(state=>state?.productsStore);
+
+  const dispatch=useDispatch();
  
   useEffect(() => {
     const fetchData = async () => {
+      SetisLoading(true);
+      let p=allProducts.products;
       try {
-        const automationProducts = await getAllProducts();
+
+        if(p?.length<1){
+          p = await getAllProducts();
+          dispatch(SetProductsReducer(p));
+        }     
+      
         setTabsProducts((prevState) => ({
           ...prevState,
-          ["All"]:automationProducts,
-          ["Automation"]: automationProducts.filter(item =>  item.Tag === 'Automation'),
-          ["SwitchGear"]: automationProducts.filter(item =>  item.Tag === 'SwitchGear'),
-          ["Other"]: automationProducts.filter(item =>  item.Tag === 'Other'),
+          ["All"]:p,
+          ["Automation"]: p?.filter(item =>  item.Tag === 'Automation'),
+          ["SwitchGear"]: p?.filter(item =>  item.Tag === 'SwitchGear'),
+          ["Other"]: p?.filter(item =>  item.Tag === 'Other'),
 
         }));
       } catch (error) {     
         console.error('Error fetching products:', error);
       }
-    };
-  
+      SetisLoading(false);
+    };     
     fetchData();
   }, []);
+
+
+
   return (
     <AnimationRevealPage>
       
       <Hero/>
       {/* TabGrid Component also accepts a tabs prop to customize the tabs and its content directly. Please open the TabGrid component file to see the structure of the tabs props.*/}
-      <TabGrid
+   {isLoading ? <Spinner/> :     <TabGrid
         heading={
           <>
             Checkout our <HighlightedText>Products.</HighlightedText>
           </>
         }
         tabs={tabs}
-      />
+      /> }
       <Features
         heading={
           <>

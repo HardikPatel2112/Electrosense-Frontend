@@ -14,7 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
 import { useEffect } from "react";
-import { FetchSuppliers, PostAddProduct } from "Utility/Api";
+import { FetchSuppliers, PostAddProduct, UploadImageApi } from "Utility/Api";
 import {ToastSuccess,ToastError} from "components/Toaster/ToastAlert";
 
 const SelectWithtw = tw(Select)`
@@ -52,10 +52,10 @@ const UploadImage = async () => {
   formData.append('Name', newProduct.name);
  let response =null;
   try {
-     response = await fetch('https://e2020231012190229.azurewebsites.net/api/Images/upload?imagename='+newProduct.name, {
-      method: 'POST',
-      body: formData
-    });
+    console.log("up",newProduct);
+    response= await UploadImageApi(newProduct.name,formData);
+
+    
   
   } catch (error) {
     ToastError("Error to upload file !")  
@@ -72,7 +72,7 @@ const UploadImage = async () => {
 const [suppliers,setsuppliers]=useState(null);
 
 useEffect(() => {  
-  
+
   const fetchandSetsuppliers = async () => {
     const response = await FetchSuppliers();
 

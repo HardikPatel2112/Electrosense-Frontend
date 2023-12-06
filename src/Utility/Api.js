@@ -2,7 +2,15 @@ import axios from "axios";
 import '../styles/datatableCustom.css'
 import jwtDecode from "jwt-decode";
 
-const baseurl= "https://e2020231012190229.azurewebsites.net/api";
+//const baseurl= "https://e2020231012190229.azurewebsites.net/api";
+
+const baseurl= "https://localhost:5001/api";
+const config = {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  },
+  "Access-Control-Allow-Origin" : "*"
+};
 
 
 var decodedToken=localStorage?.getItem("token")? jwtDecode(localStorage?.getItem("token")) :null;
@@ -25,15 +33,17 @@ const getAllProducts =async () => {
 };
 
 
+const UploadImageApi = async(name,formData)=>{
+  return (await fetch(baseurl +'/Images/upload?imagename='+name, {
+    method: 'POST',
+    body: formData
+  })
+)};
 
 
-const PostAddToCart=async(obj)=>{
-  return (await axios.post(
-    baseurl + `/Cart/AddToCart`,
-    obj,
-    config
-  ));
-}
+
+
+
 
 const deleteFromCart=async(productId)=>{
   return (
@@ -43,7 +53,14 @@ const deleteFromCart=async(productId)=>{
   ));
 }
 
-const FetchUserCart=async(productId)=>{
+const deleteProductApi=async(productId)=>{
+  return (
+    await axios.delete(
+  baseurl + `/Products/Delete?id=${productId}`  
+  ));
+}
+
+const FetchUserCart=async()=>{
   return (
  await axios.get(
       baseurl + `/Cart/GetUserCart`,
@@ -61,15 +78,34 @@ const PostAddProduct=async(productToAdd)=>{
     )
   );
 }
+const PostAddToCart=async(obj)=>{
+  return (await axios.post(
+    baseurl + `/Cart/AddToCart`,
+    obj,
+    config
+  ));
+}
 
 const FetchSuppliers=async()=>{
   return (
     await axios.get(baseurl + "/suppliers/List")
     );
   }
-  const config = {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  };
-export {getAllProducts,PostAddToCart,deleteFromCart,FetchUserCart,PostAddProduct,FetchSuppliers};
+
+  const loginApi=async(loginCred)=>{
+    return (
+      await axios.post(baseurl +'/auth/login',loginCred)
+    );
+  }
+
+  const SignupApi=async(values)=>{
+    return (
+      await axios.post(baseurl +'/auth/register',values)
+    );
+  }
+
+
+
+export {getAllProducts,PostAddToCart,deleteFromCart,
+  FetchUserCart,PostAddProduct,FetchSuppliers,
+  UploadImageApi,deleteProductApi,loginApi,SignupApi};

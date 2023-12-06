@@ -22,27 +22,29 @@ import "../styles/cart.css"
 import CartSummaryItems from "components/Cart/CartSummaryItems";
 import AnimationRevealPage from "helpers/AnimationRevealPage.js";
 import Hero from 'components/hero/BackgroundAsImage.js'
-import { FetchUserCart, PostAddToCart, deleteFromCart } from "Utility/Api";
+import {  PostAddToCart, deleteFromCart } from "Utility/Api";
 import { ToastSuccess, ToastError } from "components/Toaster/ToastAlert";
+import { useDispatch,useSelector } from "react-redux";
+import { ClearCart, SetCartItemsReducer } from "Redux/slice/cartItemsSlice";
 
 export default function Cart() {
 
-  const [cartItems, setCartItems] = useState(
-    localStorage?.getItem("cartItems")
-      ? JSON.parse(localStorage?.getItem("cartItems"))
-      : []
-  );
+  const [cartItems, setCartItems] = useState([]);
+  const dispatch=useDispatch();
+  const itemsFromState=useSelector((state)=>state?.cartItemsStore);
+ 
+  useEffect(() => { 
+    setCartItems(itemsFromState?.cartItems)
+  }, []);  
 
-  useEffect(() => {
-
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
+  const handleClearCart =()=>{  
+   dispatch(ClearCart());
+  };
 
   const handleRemoveFromCart = async (productId) => {
     const response = await deleteFromCart(productId);
 
     if (response.status === 200) {
-
       var updateditems = cartItems.filter((item) => item.productId != productId)
       setCartItems(updateditems);
       localStorage.setItem("cartItems", JSON.stringify(updateditems));
@@ -77,10 +79,9 @@ export default function Cart() {
       setCartItems((prevCartItems) => {
         const newCartItems = prevCartItems.map((item) =>
           item.productId === cartItem.productId
-            ? { ...item, quantity: item.quantity + quantitychange }
-            : item
+            ? { ...item, quantity: item.quantity + quantitychange } : item
         );
-        localStorage.setItem("cartItems", JSON.stringify(newCartItems));
+       dispatch(SetCartItemsReducer(newCartItems));
         return newCartItems;
       });
     } else {
@@ -129,6 +130,7 @@ export default function Cart() {
                 <MDBCardHeader className="py-3">
                   <MDBTypography tag="h5" className="mb-0">
                     Cart  items
+                    {/* <MDBIcon fas icon="trash" onClick={()=>handleClearCart()}  /> */}
                   </MDBTypography>
 
                 </MDBCardHeader>
@@ -187,7 +189,7 @@ export default function Cart() {
                     <MDBListGroupItem
                       className="d-flex justify-content-between align-items-center border-0 px-0 mb-3">
                       <div>
-                        <strong>Total Items - {cartItems.length}</strong>
+                        <strong>Total Items - {cartItems?.length}</strong>
                         {/* <strong>
                       <p className="mb-0">(including VAT)</p>
                     </strong> */}

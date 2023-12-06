@@ -2,7 +2,7 @@ import AnimationRevealPage from "helpers/AnimationRevealPage";
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import DataTableExtensions from "react-data-table-component-extensions";
-import { getAllProducts } from "Utility/Api";
+import { deleteProductApi, getAllProducts } from "Utility/Api";
 import tw from "twin.macro";
 import { Link } from "react-router-dom";
 import Footer from "components/footers/FiveColumnWithInputForm.js";
@@ -24,10 +24,11 @@ function AdminAction() {
  
 
   const handleDeleteProduct = async (row) => {
-    console.log(row);
+    //console.log(row);
     try {
-      const response = await axios.delete(`https://e2020231012190229.azurewebsites.net/api/Products/Delete?id=${row.productId}`);
-           setData(prevData => prevData.filter(item => item.productId !== row.productId));   
+      await deleteProductApi(row.productId);
+    
+      setData(prevData => prevData.filter(item => item.productId !== row.productId));   
       ToastSuccess("Deleted Successfully!")
 
     } catch (error) {
@@ -40,7 +41,7 @@ function AdminAction() {
   const columns = [
     {
       name: "Name",
-      selector: "description",
+      selector: "name",
       sortable: true,
       // style: {
       //   background: "gray",
@@ -86,7 +87,7 @@ function AdminAction() {
 
     fetchData();
 
-  }, [data]);
+  }, [data.length]);
 
   return (
     <div>

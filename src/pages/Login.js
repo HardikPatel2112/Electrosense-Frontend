@@ -15,6 +15,7 @@ import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link, useNavigate } from "react-router-dom";
+import { loginApi } from "Utility/Api";
 const Container = tw(ContainerBase)`min-h-screen bg-primary-900 text-white font-medium flex justify-center -m-8`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
 const MainContainer = tw.div`lg:w-1/2 xl:w-5/12 p-6 sm:p-12`;
@@ -84,7 +85,8 @@ const handleSubmit=async (e)=>{
   e.preventDefault();
 
   try {
-    const response =  await axios.post('https://e2020231012190229.azurewebsites.net/api/auth/login',loginCred);
+
+    const response =  await loginApi(loginCred);  
 
     if (response.status === 200) {
   

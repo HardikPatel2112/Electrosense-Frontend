@@ -18,7 +18,9 @@ import {
   FaSquareMinus,
   FaTrashCan,
 } from "react-icons/fa6";
-import Spinner from "components/Spinners/Spinner";
+
+import { SetCartItemsReducer } from "Redux/slice/cartItemsSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 
 const imageContext = require.context(
@@ -96,13 +98,26 @@ export default ({ heading, tabs }) => {
     return null;
   }
 
-  const [isLoading,SetisLoading]=useState(true);
+ 
   const [activeTab, setActiveTab] = useState(tabsKeys[0]); //"Automation"
-  const [cartItems, setCartItems] = useState(
-    localStorage?.getItem("cartItems")
-      ? JSON.parse(localStorage?.getItem("cartItems"))
-      : []
-  );
+  const [cartItems, setCartItems] = useState([]);
+  const cartItemsFromStore=useSelector(state=>state.cartItemsStore)
+  var dispatch= useDispatch();
+  useEffect(() => {     
+    
+    async function fetchData() {      
+    let c=cartItemsFromStore.cartItems;
+    if(c?.length <1){
+      const cartItemsFromApi=await FetchUserCart();   
+      c=cartItemsFromApi?.data?.result;
+      dispatch(SetCartItemsReducer(c)); 
+    
+    }   
+     setCartItems(c);
+    }     
+    fetchData();
+    
+  }, []); 
 
   const handleAddToWishlist = () => {
     console.log("handleAddToWishlist");
@@ -120,14 +135,14 @@ export default ({ heading, tabs }) => {
     let selectedsupForProd = selectedSuppliers?.find(
       (item) => item.productId == newItem.productId
     );
-    newItem.supplierId =
-      selectedsupForProd?.supplierId > 0 ? selectedsupForProd?.supplierId : newItem.suppliers[0].id;
+    let supplierId =
+      selectedsupForProd?.supplierId > 0 ? selectedsupForProd?.supplierId : newItem?.suppliers[0]?.id;
     if (index === -1) {
-      newItem.quantity = quantity > 0 ? quantity : 1;
+      newItem={ ...newItem, quantity : (quantity > 0 ? quantity : 1)};
       console.log(newItem);
       let obj = {
         productId: newItem.productId,
-        supplierId: newItem.supplierId,
+        supplierId: supplierId,
         quantity: newItem.quantity,
         productName: newItem.name,
         supplierName: selectedsupForProd ? selectedsupForProd.supplierName : newItem.suppliers[0].name
@@ -136,7 +151,9 @@ export default ({ heading, tabs }) => {
       const response = await PostAddToCart(obj);
 
       if (response.status === 200) {
+      
         setCartItems(cartItems?.concat(obj));
+        dispatch(SetCartItemsReducer(cartItems?.concat(obj))); 
         ToastSuccess("Product added successfully!")
        
       } else {
@@ -144,18 +161,19 @@ export default ({ heading, tabs }) => {
       }
     } else {
       const updatedItems = [...cartItems];
-      if (updatedItems.length > 0) {
+      if (updatedItems.length > 0 &&  updatedItems[index]) {
         updatedItems[index].quantity =
           (updatedItems[index]?.quantity ? updatedItems[index]?.quantity : 0) +  1;
       }
       const response = await PostAddToCart({
         productId: newItem.productId,
-        supplierId: newItem.supplierId,
+        supplierId: supplierId,
         quantity: updatedItems[index].quantity,
       });
 
       if (response.status === 200) {
         setCartItems(updatedItems);
+        dispatch(SetCartItemsReducer(updatedItems)); 
         ToastSuccess("quantity updateed!");
       } else {
         ToastError("Failed to add update quantity !");
@@ -206,6 +224,7 @@ export default ({ heading, tabs }) => {
         });
       if (response.status === 200) {
         setCartItems(updatedProducts);
+        dispatch(SetCartItemsReducer(updatedProducts)); 
       } else {
         console.log("failed to alter quantity");
       }
@@ -251,49 +270,19 @@ export default ({ heading, tabs }) => {
 
     if (response.status === 200) {
       setCartItems(updatedProducts);
+      dispatch(SetCartItemsReducer(updatedProducts)); 
     } else {
       console.log("failed to add supplier");
     }
   };
 
-  useEffect(() => {
-
-    if (!localStorage.getItem("cartItems") && localStorage.getItem("token")) {
-
-      async function setCartItemstolocal() {
-        try {
-          const response = await FetchUserCart();
-
-          if (response.status === 200) {
-            const newElement = response.data.result.map((item) => ({
-              productId: item.productId,
-              supplierId: item.supplierId,
-              quantity: item.quantity,
-              productName:item.productName,
-              supplierName:item.supplierName
-            }));
-            setCartItems(newElement);
-            localStorage.setItem("cartItems", JSON.stringify(newElement));
-          } else {
-            ToastError("failed to alter quantity");
-          }
-        } catch (error) {
-          ToastError("An error occurred:", error);
-        }
-      }
-      setCartItemstolocal();
-    } else {
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    }
-    SetisLoading(false);
-  }, [cartItems]);
 
   const handleRemoveFromCart = async (productId) => {
     const response = await deleteFromCart(productId);
 
     if (response.status === 200) {
       setCartItems(cartItems.filter((item) => item.productId != productId));
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      dispatch(SetCartItemsReducer(cartItems.filter((item) => item.productId != productId)));  
       ToastSuccess("Removed From Cart!");
     } else {
       ToastError("failed to RemoveFromCart");
@@ -320,7 +309,8 @@ export default ({ heading, tabs }) => {
       setCartItems(
         cartItems.filter((e) => e.productId != item.productId)?.concat(item)
       );
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      dispatch(SetCartItemsReducer(cartItems));  
+
       return;
     }
 
@@ -334,6 +324,7 @@ export default ({ heading, tabs }) => {
       return product;
     });
     setCartItems(updatedProducts);
+    dispatch(SetCartItemsReducer(cartItems));  
   };
 
   return (
@@ -355,7 +346,7 @@ export default ({ heading, tabs }) => {
             ))}
           </TabsControl>
         </HeaderRow>
-{isLoading ? <Spinner/> : 
+{
 
 <>
 {tabsKeys &&

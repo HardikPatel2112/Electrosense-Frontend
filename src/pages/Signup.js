@@ -11,6 +11,7 @@ import { ReactComponent as SignUpIcon } from "feather-icons/dist/icons/user-plus
 import logoes from "../electrosenseResources/images/ELECTROSENSE LOGO.png";
 import { ToastContainer, toast } from 'react-toastify';
 import { Link, Navigate } from "react-router-dom";
+import { SignupApi } from "Utility/Api";
 const Container = tw(
   ContainerBase
 )`min-h-screen bg-primary-900 text-white font-medium flex justify-center -m-8`;
@@ -75,7 +76,7 @@ export default ({
     },
     onSubmit:async values =>  {
       
-      const response = await axios.post('https://e2020231012190229.azurewebsites.net/api/auth/register',values);
+      const response = await SignupApi(values);
       if (response.status === 200) {        
         toast.success("SignUp In successfully!" ,{position: "top-right",  theme: "dark"}) 
         Navigate('/login');

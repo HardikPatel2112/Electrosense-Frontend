@@ -50,7 +50,7 @@ function CartSummaryItems(props) {
             className="bg-image rounded hover-zoom hover-overlay"
           >
             <img
-              src={`https://e2020231012190229.azurewebsites.net/api/Images/${props.cartItem.productName}.png`}
+              src={`https://localhost:5001/api/Images/${props.cartItem.productName}.png`}
 
               className="w-100"
             />
@@ -76,7 +76,7 @@ function CartSummaryItems(props) {
             title="Remove item"
        
           >
-            <MDBIcon fas icon="trash"       onClick={()=>ClickRemoveFromCart(props.cartItem.productId)}  />
+            <MDBIcon fas icon="trash"  onClick={()=>ClickRemoveFromCart(props.cartItem.productId)}  />
           </MDBTooltip>
 
           <MDBTooltip
@@ -102,7 +102,8 @@ function CartSummaryItems(props) {
 
           {/* <p className="text-start text-md-center">
             <strong>$17.99</strong>
-          </p> */}
+          </p> */} 
+          
         </MDBCol>
       </MDBRow>
 
