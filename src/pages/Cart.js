@@ -22,7 +22,7 @@ import "../styles/cart.css"
 import CartSummaryItems from "components/Cart/CartSummaryItems";
 import AnimationRevealPage from "helpers/AnimationRevealPage.js";
 import Hero from 'components/hero/BackgroundAsImage.js'
-import {  PostAddToCart, deleteFromCart } from "Utility/Api";
+import {  FetchUserCart, PostAddToCart, deleteFromCart } from "Utility/Api";
 import { ToastSuccess, ToastError } from "components/Toaster/ToastAlert";
 import { useDispatch,useSelector } from "react-redux";
 import { ClearCart, SetCartItemsReducer } from "Redux/slice/cartItemsSlice";
@@ -30,11 +30,25 @@ import { ClearCart, SetCartItemsReducer } from "Redux/slice/cartItemsSlice";
 export default function Cart() {
 
   const [cartItems, setCartItems] = useState([]);
+  
   const dispatch=useDispatch();
   const itemsFromState=useSelector((state)=>state?.cartItemsStore);
  
   useEffect(() => { 
-    setCartItems(itemsFromState?.cartItems)
+
+    console.log("Caart rendered");
+
+    async function fetchData() {      
+      let c=itemsFromState.cartItems;
+      if(c?.length <1){   }   
+        const cartItemsFromApi=await FetchUserCart();   
+        c=cartItemsFromApi?.data?.result;
+        dispatch(SetCartItemsReducer(c)); 
+      
+   
+       setCartItems(c);
+      }     
+      fetchData();
   }, []);  
 
   const handleClearCart =()=>{  
@@ -113,7 +127,7 @@ export default function Cart() {
 
     if (response.status === 200) {
       setCartItems(updatedProducts);
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    
     } else {
       console.log("failed to edit quantity");
     }

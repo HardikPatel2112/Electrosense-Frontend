@@ -1,22 +1,20 @@
 import axios from "axios";
 import '../styles/datatableCustom.css'
 import jwtDecode from "jwt-decode";
+import getApiConfig from "./apiConfig";
 
 //const baseurl= "https://e2020231012190229.azurewebsites.net/api";
 
-const baseurl= "https://localhost:5001/api";
-const config = {
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-  },
-  "Access-Control-Allow-Origin" : "*"
-};
+//const baseurl= "https://localhost:5001/api";
+
+const baseurl='https://electrosense.bsite.net/api';
+
 
 
 var decodedToken=localStorage?.getItem("token")? jwtDecode(localStorage?.getItem("token")) :null;
 
 const getAllProducts =async () => {
-    const response = await axios.get(baseurl + `/Products/GetList?nameid=${decodedToken?.nameid}`,config);
+    const response = await axios.get(baseurl + `/Products/GetList?nameid=${decodedToken?.nameid}`,getApiConfig());
     
     const newElement = response.data.result.map((item) => ({
         name: item.name,
@@ -49,7 +47,7 @@ const deleteFromCart=async(productId)=>{
   return (
     await axios.delete(
   baseurl + `/Cart/RemoveFromCart?productId=${productId}`,
-  config
+  getApiConfig()
   ));
 }
 
@@ -64,7 +62,7 @@ const FetchUserCart=async()=>{
   return (
  await axios.get(
       baseurl + `/Cart/GetUserCart`,
-      config
+      getApiConfig()
     )
   );
 }
@@ -74,7 +72,7 @@ const PostAddProduct=async(productToAdd)=>{
  await axios.post(
      baseurl + '/Products/Add',
       productToAdd,
-      config
+      getApiConfig()
     )
   );
 }
@@ -82,7 +80,7 @@ const PostAddToCart=async(obj)=>{
   return (await axios.post(
     baseurl + `/Cart/AddToCart`,
     obj,
-    config
+    getApiConfig()
   ));
 }
 

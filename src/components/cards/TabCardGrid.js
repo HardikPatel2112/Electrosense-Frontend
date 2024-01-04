@@ -21,6 +21,7 @@ import {
 
 import { SetCartItemsReducer } from "Redux/slice/cartItemsSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router";
 
 
 const imageContext = require.context(
@@ -122,7 +123,12 @@ export default ({ heading, tabs }) => {
   const handleAddToWishlist = () => {
     console.log("handleAddToWishlist");
   };
+
+  const navigate= useNavigate();
+
   const handleInquiry = () => {
+
+    navigate('/contactUs');
     console.log("handleInquiry");
   };
 

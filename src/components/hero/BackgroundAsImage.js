@@ -8,6 +8,9 @@ import landingimage from '../../electrosenseResources/images/landingpage.jpg'
 import jwtDecode from "jwt-decode";
 import { ToastContainer } from 'react-toastify';
 import FloatingIcon from "../cards/FloatingIcon.js";
+
+import { useDispatch } from "react-redux";
+import { resetStoreAction } from "Redux/store.js";
 const StyledHeader = styled(Header)`
   ${tw`pt-8 max-w-none`}
   ${DesktopNavLinks} ${NavLink}, ${LogoLink} {
@@ -81,17 +84,19 @@ export default () => {
   const location =useLocation();
 
   const navigate = useNavigate();
+  const dispatch=useDispatch();
   const handleLogout=()=>{
     localStorage.removeItem('token');
     localStorage.removeItem('cartItems');
+
     SetLoginStatus(false);
     navigate("/")
-  }
-
-  useEffect(() => {
   
    
-   
+  }
+
+  useEffect(() => { 
+      
   }, [isloggedIn,location]);
  
 

@@ -50,7 +50,7 @@ function CartSummaryItems(props) {
             className="bg-image rounded hover-zoom hover-overlay"
           >
             <img
-              src={`https://localhost:5001/api/Images/${props.cartItem.productName}.png`}
+              src={`https://electrosense.bsite.net/api/Images/${props.cartItem.productName}.png`}
 
               className="w-100"
             />
